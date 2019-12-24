@@ -8,3 +8,4 @@ ENV CHROME_BIN /usr/bin/chromium-browser
 # Puppeteer v1.9.0 works with Chromium 71.
 RUN yarn add puppeteer@1.11.0
 
+CMD ["node", "usr/node/app/puppetfinder.js"]
