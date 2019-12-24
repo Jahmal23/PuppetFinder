@@ -12,4 +12,3 @@ apt-get clean && apt-get autoremove -y
 
 RUN yarn add puppeteer
 
-CMD ["node", "usr/node/app/puppetfinder.js"]

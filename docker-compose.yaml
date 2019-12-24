@@ -1,6 +1,6 @@
 version: '3'
 services:
-  puppetrun:
+  sanity_check_run:
     build:
         context: .
         dockerfile: Dockerfile
@@ -8,6 +8,19 @@ services:
       - "8080:8080"
     networks:
       - pnetwork
+    command: ["node", "usr/node/app/puppetfinder.js"]
+
+  refusa_run:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - pnetwork
+    command: ["node", "usr/node/app/refusa.js"]
 networks:
   pnetwork:
     driver: bridge
+
+
