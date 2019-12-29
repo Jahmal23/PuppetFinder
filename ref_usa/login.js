@@ -6,4 +6,7 @@ exports.performLogin = async (page) => {
     await page.goto(BASE_URL);
 
     console.log("Ref USA base page loaded. Preparing to login");
+
+
+
 };
