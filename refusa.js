@@ -1,9 +1,6 @@
 const puppeteer = require('puppeteer');
 const login = require('./ref_usa/login');
 
-const BASE_URL = "http://lalibcon.state.lib.la.us/redirect.php?illcode=s1no&database=refusa"
-
-
 console.log("Starting Ref USA Puppet run");
 
 (async () => {
@@ -13,7 +10,7 @@ console.log("Starting Ref USA Puppet run");
     });
 
     const page = await browser.newPage();
-    await page.goto(BASE_URL); //performLogin(page)//login.performLogin(page);
+    await login.performLogin(page);
 
     console.log("Ref USA base page loaded. Preparing to login");
 
@@ -21,6 +18,3 @@ console.log("Starting Ref USA Puppet run");
     await browser.close();
 })();
 
-function performLogin(page) {
-      page.goto(BASE_URL);
-}
