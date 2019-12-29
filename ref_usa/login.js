@@ -2,13 +2,8 @@ const BASE_URL = "http://lalibcon.state.lib.la.us/redirect.php?illcode=s1no&data
 const REDIRECT_URL = "http://lalibcon.state.lib.la.us/redirect.php?illcode=s1jf&database=refusa"
 
 
-exports.performLogin = (browser) => {
-    (async () => {
+exports.performLogin = (page) => {
+    page.goto(BASE_URL);
 
-        const page = await browser.newPage();
-        await page.goto(BASE_URL);
-
-        console.log("Ref USA base page loaded. Preparing to login");
-
-    })();
+    console.log("Ref USA base page loaded. Preparing to login");
 };
