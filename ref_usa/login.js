@@ -13,7 +13,6 @@ exports.performLogin = async (page) => {
 
     await page.click(BARCODE_SELECTOR);
 
-    //clear out anything existing
     await page.keyboard.type(LIBRARY_CARD);
 
     await Promise.all([

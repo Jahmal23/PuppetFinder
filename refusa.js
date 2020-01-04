@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const login = require('./ref_usa/login');
+const termsConditions = require('./ref_usa/terms_conditions');
 
 console.log("Starting Ref USA Puppet run");
 
@@ -10,8 +11,9 @@ console.log("Starting Ref USA Puppet run");
     });
 
     const page = await browser.newPage();
-    await login.performLogin(page);
 
+    await login.performLogin(page);
+    await termsConditions.accept(page)
 
     await page.screenshot({path: 'lastScreen.png'});
 
