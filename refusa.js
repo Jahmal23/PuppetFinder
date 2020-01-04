@@ -12,9 +12,11 @@ console.log("Starting Ref USA Puppet run");
     const page = await browser.newPage();
     await login.performLogin(page);
 
-    console.log("Ref USA base page loaded. Preparing to login");
+
+    await page.screenshot({path: 'lastScreen.png'});
 
     console.log("Ref USA Puppet run complete");
+
     await browser.close();
 })();
 
