@@ -14,7 +14,9 @@ exports.accept = async (page) => {
 
     await page.click(ACCEPT_SELECTOR);
 
-   await Promise.all([
+    console.log("Accepted Terms and conditions, heading to home page");
+
+    await Promise.all([
        page.waitForNavigation({waitUntil: 'networkidle0'}), // The promise resolves after navigation has finished
        page.click(CONTINUE_BUTTON_SELECTOR), // Clicking the link will indirectly cause a navigation
     ]);

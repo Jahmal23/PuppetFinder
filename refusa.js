@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const login = require('./ref_usa/login');
 const termsConditions = require('./ref_usa/terms_conditions');
+const search = require('./ref_usa/search');
 
 console.log("Starting Ref USA Puppet run");
 
@@ -13,7 +14,16 @@ console.log("Starting Ref USA Puppet run");
     const page = await browser.newPage();
 
     await login.performLogin(page);
-    await termsConditions.accept(page)
+    await termsConditions.accept(page);
+
+    let searchPerson = {
+        firstname:"Maria",
+        lastname:"Silva",
+        city: "Ludlow",
+        state: "MA"
+    };
+
+    await search.perform(page, searchPerson);
 
     await page.screenshot({path: 'lastScreen.png'});
 
