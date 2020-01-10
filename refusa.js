@@ -19,6 +19,6 @@ console.log("Starting Ref USA Puppet run");
 
     console.log("Ref USA Puppet run complete");
 
-    await browser.close();
+    //await browser.close();
 })();
 

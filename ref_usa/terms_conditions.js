@@ -12,15 +12,12 @@ exports.accept = async (page) => {
 
     console.log("On Terms and conditions, about to check agree box");
 
-    // await page.click(BARCODE_SELECTOR);
-    //
-    // await page.keyboard.type(LIBRARY_CARD);
-    //
-    // await Promise.all([
-    //     page.waitForNavigation({waitUntil: 'networkidle0'}), // The promise resolves after navigation has finished
-    //     page.click(LOGIN_BUTTON_SELECTOR), // Clicking the link will indirectly cause a navigation
-    // ]);
-    //
-    // //ref usa has a looooooong initial load time
-    // await page.waitFor(10*1000);
+    await page.click(ACCEPT_SELECTOR);
+
+   await Promise.all([
+       page.waitForNavigation({waitUntil: 'networkidle0'}), // The promise resolves after navigation has finished
+       page.click(CONTINUE_BUTTON_SELECTOR), // Clicking the link will indirectly cause a navigation
+    ]);
+
+    await page.waitFor(2*1000);
 };
