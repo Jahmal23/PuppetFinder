@@ -21,3 +21,7 @@ https://stackoverflow.com/questions/54527982/why-is-puppeteer-reporting-unhandle
 https://www.aymen-loukil.com/en/blog-en/google-puppeteer-tutorial-with-examples/
 
 https://medium.com/@e_mad_ehsan/getting-started-with-puppeteer-and-chrome-headless-for-web-scrapping-6bf5979dee3e
+
+https://stackoverflow.com/questions/51535319/scraping-table-to-get-specific-data-using-puppeteer?noredirect=1&lq=1
+
+https://stackoverflow.com/questions/49236981/want-to-scrape-table-using-puppeteer-js-how-can-i-get-all-rows-iterate-through

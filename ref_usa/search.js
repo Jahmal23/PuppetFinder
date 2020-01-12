@@ -6,7 +6,6 @@ const LASTNAME_SELECTOR = "#lastName"
 const CITY_SELECTOR = "#city"
 const STATE_SELECTOR = "#stateProvince"
 
-
 const VIEW_RESULTS_BUTTON_SELECTOR = "#quickSearch > form > fieldset > div.submitButton > a"
 
 exports.perform = async (page, searchPerson) => {
