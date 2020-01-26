@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 const login = require('./ref_usa/login');
 const termsConditions = require('./ref_usa/terms_conditions');
 const search = require('./ref_usa/search');
+const scrape = require('./ref_usa/scrape');
 
 console.log("Starting Ref USA Puppet run");
 
@@ -26,6 +27,8 @@ console.log("Starting Ref USA Puppet run");
     await search.perform(page, searchPerson);
 
     await page.screenshot({path: 'lastScreen.png'});
+
+    await scrape.perform(page);
 
     console.log("Ref USA Puppet run complete");
 
