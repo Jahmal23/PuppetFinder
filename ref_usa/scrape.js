@@ -27,3 +27,7 @@ async function scrapeCurrentPage(page, pageNum = 1) {
 }
 
 
+
+
+
+

@@ -22,7 +22,6 @@ exports.perform = async (page, searchPerson) => {
          await page.goto(SEARCH_URL)
      ]);
 
-
     await page.click(FIRSTNAME_SELECTOR);
     await page.keyboard.type(searchPerson.firstname);
 
