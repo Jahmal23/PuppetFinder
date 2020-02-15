@@ -1,9 +1,8 @@
+const helpers = require('../helpers/foundPerson');
 
 BASE_URL = "http://www.referenceusa.com/UsWhitePages/Result/"
 
-const RESULTS_TABLE_SELECTOR = '#tblResults tr td'
-
-exports.perform = async (page) => {
+exports.perform = async (page, searchPerson) => {
 
     if (!page.url().includes(BASE_URL)) {
         console.log(`Unexpected starting url ${BASE_URL} for result page`);
@@ -12,10 +11,10 @@ exports.perform = async (page) => {
 
     console.log("On results page, attempting to compile results ");
 
-    await scrapeCurrentPage(page);
+    await scrapeCurrentPage(page, searchPerson);
 };
 
-async function scrapeCurrentPage(page, pageNum = 1) {
+async function scrapeCurrentPage(page, searchPerson, pageNum = 1) {
 
     console.log("About to try and dump the Ref Usa results table");
     const data = await page.evaluate(() => {
@@ -23,8 +22,20 @@ async function scrapeCurrentPage(page, pageNum = 1) {
         return tds.map(td => td.innerHTML);
     });
 
-    console.log(data[1]);
+   console.log(buildFoundPerson(data, searchPerson));
 }
+
+
+function buildFoundPerson(tblData, searchPerson) {
+     let fh = helpers.FoundPerson;
+
+     fh.lastName = searchPerson.lastname;
+     fh.address = tblData[3];
+     fh.telephone = tblData[6];
+
+     return fh;
+}
+
 
 
 

@@ -28,7 +28,7 @@ console.log("Starting Ref USA Puppet run");
 
     await page.screenshot({path: 'lastScreen.png'});
 
-    await scrape.perform(page);
+    await scrape.perform(page, searchPerson);
 
     console.log("Ref USA Puppet run complete");
 
