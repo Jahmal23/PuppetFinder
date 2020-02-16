@@ -40,6 +40,4 @@ exports.perform = async (page, searchPerson) => {
         page.waitForNavigation({waitUntil: 'networkidle0'}), // The promise resolves after navigation has finished
         page.click(VIEW_RESULTS_BUTTON_SELECTOR), // Clicking the link will indirectly cause a navigation
     ]);
-
-    return searchPerson;
 };

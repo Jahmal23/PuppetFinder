@@ -1,4 +1,4 @@
-const helpers = require('../helpers/foundPerson');
+const helpers = require('../helpers/persons');
 
 BASE_URL = "http://www.referenceusa.com/UsWhitePages/Result/"
 
@@ -22,18 +22,31 @@ async function scrapeCurrentPage(page, searchPerson, pageNum = 1) {
         return tds.map(td => td.innerHTML);
     });
 
-   console.log(buildFoundPerson(data, searchPerson));
+   console.log(buildFoundPersons(data, searchPerson));
 }
 
+function buildFoundPersons(tblData, searchPerson) {
 
-function buildFoundPerson(tblData, searchPerson) {
-     let fh = helpers.FoundPerson;
+    let persons = [];
 
-     fh.lastName = searchPerson.lastname;
-     fh.address = tblData[3];
-     fh.telephone = tblData[6];
+    //The first 3 entries in the data are a checkbox and name hyperlinks.  Address starts at position 4
+    const addressStartIndex = 3;
 
-     return fh;
+    //Each address has 4 positions
+    const addressSetLength = 7;
+
+    const telephonePosition = 3;
+
+    for(let i = addressStartIndex; i + telephonePosition < tblData.length; i+= addressSetLength){
+        let fh = helpers.FoundPerson;
+
+        fh.lastName = searchPerson.lastname;
+        fh.address = tblData[i];
+        fh.telephone = tblData[i + telephonePosition ];
+
+        persons.push(fh);
+    }
+     return persons;
 }
 
 
