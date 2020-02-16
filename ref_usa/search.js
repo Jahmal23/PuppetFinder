@@ -22,6 +22,9 @@ exports.perform = async (page, searchPerson) => {
          await page.goto(SEARCH_URL)
      ]);
 
+
+    console.log(`Filling in information to search ${searchPerson.toString()}`);
+
     await page.click(FIRSTNAME_SELECTOR);
     await page.keyboard.type(searchPerson.firstname);
 

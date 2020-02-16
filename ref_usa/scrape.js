@@ -37,16 +37,13 @@ function buildFoundPersons(tblData, searchPerson) {
 
     const telephonePosition = 3;
 
-    for(let i = addressStartIndex; i + telephonePosition < tblData.length; i+= addressSetLength){
-        let fh = helpers.FoundPerson;
+    for(let i = addressStartIndex; i + telephonePosition < tblData.length; i+= addressSetLength) {
 
-        fh.lastName = searchPerson.lastname;
-        fh.address = tblData[i];
-        fh.telephone = tblData[i + telephonePosition ];
-
+        let fh = new helpers.FoundPerson( searchPerson.lastname, tblData[i], tblData[ i + telephonePosition ] );
         persons.push(fh);
     }
-     return persons;
+
+    return persons;
 }
 
 
