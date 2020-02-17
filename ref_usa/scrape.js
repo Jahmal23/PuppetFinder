@@ -1,6 +1,7 @@
 const helpers = require('../helpers/persons');
 
-BASE_URL = "http://www.referenceusa.com/UsWhitePages/Result/"
+BASE_URL = "http://www.referenceusa.com/UsWhitePages/Result/";
+PAGE_COUNT_SELECTOR = '#searchResults > div:nth-child(1) > div > div.pageBar > div.text > span.data-page-max';
 
 exports.perform = async (page, searchPerson) => {
 
@@ -10,6 +11,11 @@ exports.perform = async (page, searchPerson) => {
     }
 
     console.log("On results page, attempting to compile results ");
+
+    const pageCount = await getPageCount(page);
+
+    console.log("Here comes the page count");
+    console.log(pageCount);
 
     await scrapeCurrentPage(page, searchPerson);
 };
@@ -22,7 +28,7 @@ async function scrapeCurrentPage(page, searchPerson, pageNum = 1) {
         return tds.map(td => td.innerHTML);
     });
 
-   console.log(buildFoundPersons(data, searchPerson));
+    console.log(buildFoundPersons(data, searchPerson));
 }
 
 function buildFoundPersons(tblData, searchPerson) {
@@ -46,8 +52,19 @@ function buildFoundPersons(tblData, searchPerson) {
     return persons;
 }
 
+async function getPageCount(page) {
 
+    const innerHTML = await page.evaluate(() => {
+        const pcs = Array.from(document.querySelectorAll('#searchResults > div:nth-child(1) > div > div.pageBar > div.text > span.data-page-max')); //todo why do I have to hardcode this?
 
+        // There may be many page counters, but just grab the first since they will obviously all have the same value.
+        return pcs.map(pc => pc.innerHTML)[0];
+    });
+
+    const count = innerHTML ? Math.trunc(innerHTML) : 1;
+
+    return count;
+}
 
 
 

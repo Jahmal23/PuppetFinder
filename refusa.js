@@ -15,7 +15,7 @@ console.log("Starting Ref USA Puppet run");
 
     const page = await browser.newPage();
 
-    let sp = new helpers.SearchPerson("Maria", "Silva", "Ludlow", "MA");
+    let sp = new helpers.SearchPerson("", "Silva", "Ludlow", "MA");
 
     await login.performLogin(page);
 
