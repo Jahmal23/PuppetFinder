@@ -22,6 +22,9 @@ exports.perform = async (page, searchPerson) => {
          await page.goto(SEARCH_URL)
      ]);
 
+
+    console.log(`Filling in information to search ${searchPerson.toString()}`);
+
     await page.click(FIRSTNAME_SELECTOR);
     await page.keyboard.type(searchPerson.firstname);
 
@@ -40,5 +43,4 @@ exports.perform = async (page, searchPerson) => {
         page.waitForNavigation({waitUntil: 'networkidle0'}), // The promise resolves after navigation has finished
         page.click(VIEW_RESULTS_BUTTON_SELECTOR), // Clicking the link will indirectly cause a navigation
     ]);
-
 };
