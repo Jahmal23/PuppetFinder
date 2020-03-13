@@ -15,10 +15,12 @@ exports.perform = async (page, searchPerson) => {
 
     const pageCount = await getPageCount(page);
 
-    console.log("Here comes the page count");
-    console.log(pageCount);
+    for(let i = 1; i <= pageCount; i++){
 
-    await scrapeCurrentPage(page, searchPerson);
+        console.log(`Scraping page ${i}`);
+
+        await scrapeCurrentPage(page, searchPerson, i);
+    }
 
     console.log(`Scrape complete for ${searchPerson.lastname}.  Returning to homepage`);
 
