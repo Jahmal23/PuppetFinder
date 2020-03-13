@@ -1,8 +1,8 @@
 To Run: 
 
-docker-compose up  --build --remove-orphans --force-recreate sanity_check_run
+./scripts/run_refusa.sh
 
-docker-compose up  --build --remove-orphans --force-recreate refusa_run
+./scripts/sanitycheck.sh
 
 
 To See a Screenshot locally:

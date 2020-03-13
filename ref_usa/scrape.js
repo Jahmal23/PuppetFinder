@@ -1,5 +1,6 @@
 const helpers = require('../helpers/persons');
 
+HOME_URL = "http://www.referenceusa.com/Home/Home"
 BASE_URL = "http://www.referenceusa.com/UsWhitePages/Result/";
 PAGE_COUNT_SELECTOR = '#searchResults > div:nth-child(1) > div > div.pageBar > div.text > span.data-page-max';
 
@@ -18,6 +19,10 @@ exports.perform = async (page, searchPerson) => {
     console.log(pageCount);
 
     await scrapeCurrentPage(page, searchPerson);
+
+    console.log(`Scrape complete for ${searchPerson.lastname}.  Returning to homepage`);
+
+    await page.goto(HOME_URL);
 };
 
 async function scrapeCurrentPage(page, searchPerson, pageNum = 1) {
