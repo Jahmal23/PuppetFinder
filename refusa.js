@@ -4,7 +4,7 @@ const termsConditions = require('./ref_usa/terms_conditions');
 const search = require('./ref_usa/search');
 const helpers = require('./helpers/persons');
 const scrape = require('./ref_usa/scrape');
-const searchPersons = require('./helpers/portuguese.json')
+const searchPersons = require('./helpers/portuguese.json');
 
 console.log("Starting Ref USA Puppet run");
 
