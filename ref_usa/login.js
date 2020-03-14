@@ -2,7 +2,7 @@ const BASE_URL = "http://lalibcon.state.lib.la.us/redirect.php?illcode=s1no&data
 const REDIRECT_URL = "http://lalibcon.state.lib.la.us/redirect.php?illcode=s1jf&database=refusa"
 
 const BARCODE_SELECTOR = '#barcode';
-const LIBRARY_CARD = "22400008565125";
+const LIBRARY_CARD = process.env.LIBRARY_CARD;
 const LOGIN_BUTTON_SELECTOR = "#loginbox > form > input[type=submit]:nth-child(5)";
 
 exports.performLogin = async (page) => {
