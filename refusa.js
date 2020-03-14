@@ -42,9 +42,7 @@ console.log("Starting Ref USA Puppet run");
     }
 
     console.log("Ref USA Puppet run complete");
-
-    console.log(typeof JSON.stringify(foundPersons));
-
+    
     await mailer.send("PuppetFinder: Reference USA Search Results", JSON.stringify(foundPersons));
 
     console.log("Results Published");
