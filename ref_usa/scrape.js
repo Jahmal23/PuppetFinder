@@ -4,7 +4,7 @@ HOME_URL = "http://www.referenceusa.com/Home/Home"
 BASE_URL = "http://www.referenceusa.com/UsWhitePages/Result/";
 PAGE_COUNT_SELECTOR = '#searchResults > div:nth-child(1) > div > div.pageBar > div.text > span.data-page-max';
 
-exports.perform = async (page, searchPerson) => {
+exports.perform = async (page, searchPerson, foundPersons) => {
 
     if (!page.url().includes(BASE_URL)) {
         console.log(`Unexpected starting url ${BASE_URL} for result page`);
@@ -19,15 +19,20 @@ exports.perform = async (page, searchPerson) => {
 
         console.log(`Scraping page ${i}`);
 
-        await scrapeCurrentPage(page, searchPerson, i);
+         await scrapeCurrentPage(page, searchPerson, foundPersons, i);
     }
 
     console.log(`Scrape complete for ${searchPerson.lastname}.  Returning to homepage`);
 
-    await page.goto(HOME_URL);
+    await Promise.all([
+        page.waitForNavigation({waitUntil: 'networkidle0'}), // The promise resolves after navigation has finished
+        await page.goto(HOME_URL)
+    ]);
+
+    return foundPersons; 
 };
 
-async function scrapeCurrentPage(page, searchPerson, pageNum = 1) {
+async function scrapeCurrentPage(page, searchPerson, foundPersons, pageNum = 1) {
 
     console.log("About to try and dump the Ref Usa results table");
     const data = await page.evaluate(() => {
@@ -35,12 +40,10 @@ async function scrapeCurrentPage(page, searchPerson, pageNum = 1) {
         return tds.map(td => td.innerHTML);
     });
 
-    console.log(buildFoundPersons(data, searchPerson));
+    return buildFoundPersons(data, searchPerson, foundPersons);
 }
 
-function buildFoundPersons(tblData, searchPerson) {
-
-    let persons = [];
+function buildFoundPersons(tblData, searchPerson, foundPersons) {
 
     //The first 3 entries in the data are a checkbox and name hyperlinks.  Address starts at position 4
     const addressStartIndex = 3;
@@ -53,10 +56,10 @@ function buildFoundPersons(tblData, searchPerson) {
     for(let i = addressStartIndex; i + telephonePosition < tblData.length; i+= addressSetLength) {
 
         let fh = new helpers.FoundPerson( searchPerson.lastname, tblData[i], tblData[ i + telephonePosition ] );
-        persons.push(fh);
+        foundPersons.push(fh);
     }
 
-    return persons;
+    return foundPersons;
 }
 
 async function getPageCount(page) {

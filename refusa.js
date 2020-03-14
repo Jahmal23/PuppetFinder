@@ -4,7 +4,8 @@ const termsConditions = require('./ref_usa/terms_conditions');
 const search = require('./ref_usa/search');
 const helpers = require('./helpers/persons');
 const scrape = require('./ref_usa/scrape');
-const searchPersons = require('./helpers/portuguese.json')
+const searchPersons = require('./helpers/portuguese.json');
+const mailer = require('./helpers/mailer');
 
 console.log("Starting Ref USA Puppet run");
 
@@ -23,6 +24,8 @@ console.log("Starting Ref USA Puppet run");
     
     await termsConditions.accept(page);
 
+    let foundPersons = [];
+
     for(let i = 0; i < searchPersons.length; i++){
 
         currName = searchPersons[i];
@@ -33,13 +36,20 @@ console.log("Starting Ref USA Puppet run");
 
         await search.perform(page, sp);
 
-        await scrape.perform(page, sp);
+        foundPersons = await scrape.perform(page, sp, foundPersons);
     
         await page.screenshot({path: 'lastScreen.png'});  
-    } 
+    }
 
     console.log("Ref USA Puppet run complete");
 
+    console.log(typeof JSON.stringify(foundPersons));
+
+    await mailer.send("PuppetFinder: Reference USA Search Results", JSON.stringify(foundPersons));
+
+    console.log("Results Published");
+
     //await browser.close();
-})().catch(error => { console.log('CAUGHT ERROR', error.message); });
+
+})().catch(error => { console.log('MAJOR FAIL -- ', error.message); });
 
