@@ -40,7 +40,9 @@ exports.perform = async (page, searchPerson) => {
     console.log("Info filled in. Clicking View Results button");
 
     await Promise.all([
-        page.waitForNavigation({waitUntil: 'networkidle0'}), // The promise resolves after navigation has finished
+        page.waitForNavigation({waitUntil: 'networkidle0', timeout: 5000}), // The promise resolves after navigation has finished
         page.click(VIEW_RESULTS_BUTTON_SELECTOR), // Clicking the link will indirectly cause a navigation
-    ]);
+    ]).catch(function(err) {
+        console.log(`Appears that no results were found for ${searchPerson.toString()}`);
+    });
 };
