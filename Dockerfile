@@ -9,4 +9,6 @@ apt-get clean && apt-get autoremove -y
 
 RUN yarn add puppeteer
 
+RUN npm install aws-sdk
+
 COPY . /usr/node/app
