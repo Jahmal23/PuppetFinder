@@ -7,8 +7,16 @@ PAGE_COUNT_SELECTOR = '#searchResults > div:nth-child(1) > div > div.pageBar > d
 exports.perform = async (page, searchPerson, foundPersons) => {
 
     if (!page.url().includes(BASE_URL)) {
+
         console.log(`Unexpected starting url ${BASE_URL} for result page`);
-        return;
+        console.log(`Likely no results found, Returning to homepage \n`);
+
+        await Promise.all([
+            page.waitForNavigation({waitUntil: 'networkidle0'}),
+            await page.goto(HOME_URL)
+        ]);
+
+        return foundPersons;
     }
 
     console.log("On results page, attempting to compile results ");
@@ -22,7 +30,7 @@ exports.perform = async (page, searchPerson, foundPersons) => {
          await scrapeCurrentPage(page, searchPerson, foundPersons, i);
     }
 
-    console.log(`Scrape complete for ${searchPerson.lastname}.  Returning to homepage`);
+    console.log(`Scrape complete for ${searchPerson.lastname}.  Returning to homepage \n`);
 
     await Promise.all([
         page.waitForNavigation({waitUntil: 'networkidle0'}), // The promise resolves after navigation has finished
@@ -33,8 +41,6 @@ exports.perform = async (page, searchPerson, foundPersons) => {
 };
 
 async function scrapeCurrentPage(page, searchPerson, foundPersons, pageNum = 1) {
-
-    console.log("About to try and dump the Ref Usa results table");
     const data = await page.evaluate(() => {
         const tds = Array.from(document.querySelectorAll('#tblResults tr td')); //todo why do I have to hardcode this?
         return tds.map(td => td.innerHTML);

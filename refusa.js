@@ -4,7 +4,7 @@ const termsConditions = require('./ref_usa/terms_conditions');
 const search = require('./ref_usa/search');
 const helpers = require('./helpers/persons');
 const scrape = require('./ref_usa/scrape');
-const searchPersons = require('./helpers/portuguese.json');
+const searchPersons = require('./helpers/test_names.json'); //require('./helpers/portuguese.json');
 const mailer = require('./helpers/mailer');
 
 console.log("Starting Ref USA Puppet run");
@@ -49,5 +49,5 @@ console.log("Starting Ref USA Puppet run");
 
     //await browser.close();
 
-})().catch(error => { console.log('MAJOR FAIL -- ', error.message); });
+})().catch(error => { console.log('FATAL ERROR -- ', error.message); });
 
