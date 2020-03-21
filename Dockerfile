@@ -9,7 +9,8 @@ apt-get clean && apt-get autoremove -y
 
 RUN yarn add puppeteer
 
-RUN npm install aws-sdk
-RUN npm install csv-writer
+RUN npm i aws-sdk
+RUN npm i csv-writer
+RUN npm i @sendgrid/mail
 
 COPY . /usr/node/app

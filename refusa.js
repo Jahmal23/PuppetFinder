@@ -43,7 +43,7 @@ console.log("Starting Ref USA Puppet run");
     }
 
     publishResults(foundPersons);
-    
+
     console.log("Ref USA Puppet run complete");
 
        //await browser.close();
@@ -57,8 +57,13 @@ async function publishResults(foundPersons) {
         {id: 'address', title: 'Address'},
         {id: 'telephone', title: 'Telephone'}], 'results.csv', foundPersons);
     
+    let args = {from: "PuppetFinder", 
+                subject: "PuppetFinder: Reference USA Search Result", 
+                text: "Please find the results attached.", 
+                csvPath: "results.csv"};
+
         
-    await mailer.send("PuppetFinder: Reference USA Search Results", JSON.stringify(foundPersons));
+    await mailer.send(args);
 
     console.log("Results published");
 
