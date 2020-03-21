@@ -6,6 +6,7 @@ const helpers = require('./helpers/persons');
 const scrape = require('./ref_usa/scrape');
 const searchPersons = require('./helpers/test_names.json'); //require('./helpers/portuguese.json');
 const mailer = require('./helpers/mailer');
+const csvWriter = require('./helpers/csv_writer')
 
 console.log("Starting Ref USA Puppet run");
 
@@ -41,13 +42,24 @@ console.log("Starting Ref USA Puppet run");
         await page.screenshot({path: 'lastScreen.png'});  
     }
 
-    console.log("Ref USA Puppet run complete");
+    publishResults(foundPersons);
     
-    await mailer.send("PuppetFinder: Reference USA Search Results", JSON.stringify(foundPersons));
+    console.log("Ref USA Puppet run complete");
 
-    console.log("Results Published");
-
-    //await browser.close();
+       //await browser.close();
 
 })().catch(error => { console.log('FATAL ERROR -- ', error.message); });
 
+async function publishResults(foundPersons) {
+
+    await csvWriter.writeCSV([
+        {id: 'lastname', title: 'LastName'},
+        {id: 'address', title: 'Address'},
+        {id: 'telephone', title: 'Telephone'}], 'results.csv', foundPersons);
+    
+        
+    await mailer.send("PuppetFinder: Reference USA Search Results", JSON.stringify(foundPersons));
+
+    console.log("Results published");
+
+}
