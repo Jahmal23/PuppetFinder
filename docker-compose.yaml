@@ -11,8 +11,8 @@ services:
     command: ["node", "usr/node/app/puppetfinder.js"]
 
   refusa_run:
-    environment:
-      - LIBRARY_CARD=22400008565125
+    env_file:
+      - variables.env
     build:
       context: .
       dockerfile: Dockerfile

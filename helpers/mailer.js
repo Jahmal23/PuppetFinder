@@ -1,15 +1,27 @@
-const AWS = require('aws-sdk');
-AWS.config.update({region: 'us-east-1'});
+const fs = require("fs");
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-exports.send = async (subject, text) => {
-    let params = {
-        Message: text, 
-        Subject: subject,
-        TopicArn: 'arn:aws:sns:us-east-1:743986540256:PuppetFinderNotification' //from config!
-      };
 
-      await new AWS.SNS().publish(params, function(err, data) {
-        if (err) console.log(err, err.stack); 
-        else console.log(data);
-    });
+exports.send = async (args) => {
+
+    const msg = {
+      to: args.to,
+      from: args.from,
+      subject: args.subject,
+      text: args.text,
+      attachments: [
+        {
+          content: args.attachmentData,
+          filename: args.attachmentName,
+          type: "text/csv",
+          disposition: "attachment"
+        }
+      ] 
+    };
+
+  sgMail.send(msg).catch(err => {
+    console.log(err);
+  });
+
 }

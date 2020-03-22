@@ -6,6 +6,8 @@ const helpers = require('./helpers/persons');
 const scrape = require('./ref_usa/scrape');
 const searchPersons = require('./helpers/test_names.json'); //require('./helpers/portuguese.json');
 const mailer = require('./helpers/mailer');
+const csvWriter = require('./helpers/csv_writer');
+const fs = require("fs");
 
 console.log("Starting Ref USA Puppet run");
 
@@ -38,16 +40,40 @@ console.log("Starting Ref USA Puppet run");
 
         foundPersons = await scrape.perform(page, sp, foundPersons);
     
-        await page.screenshot({path: 'lastScreen.png'});  
+        await page.screenshot({path: `${__dirname}/lastScreen.png`});  
     }
 
+    publishResults(city, foundPersons);
+
     console.log("Ref USA Puppet run complete");
-    
-    await mailer.send("PuppetFinder: Reference USA Search Results", JSON.stringify(foundPersons));
 
-    console.log("Results Published");
-
-    //await browser.close();
+       //await browser.close();
 
 })().catch(error => { console.log('FATAL ERROR -- ', error.message); });
 
+async function publishResults(city, foundPersons) {
+
+    await csvWriter.writeCSV([
+        {id: 'lastname', title: 'LastName'},
+        {id: 'address', title: 'Address'},
+        {id: 'telephone', title: 'Telephone'}], `${__dirname}/results.csv`, foundPersons);
+        
+    fs.readFile(`${__dirname}/results.csv`, (err, data) => {
+        
+        if (err) {
+            console.error(err);
+            return;
+          }
+          
+        let args = {to: process.env.RESULTS_DESTINATION,
+            from: "PuppetFinder@test.com", 
+            subject: `PuppetFinder: Reference USA Search Result - ${city}`, 
+            text: "Please find the results attached.",
+            attachmentName: "results.csv",
+            attachmentData:  data.toString("base64")};
+
+        mailer.send(args);
+      })
+
+    console.log("Results published");
+}
