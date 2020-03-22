@@ -13,7 +13,7 @@ services:
   refusa_run:
     environment:
       - LIBRARY_CARD=22400008565125
-      - SENDGRID_API_KEY=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
+      - SENDGRID_API_KEY=
       - RESULTS_DESTINATION=Jahmal23@gmail.com
     build:
       context: .
