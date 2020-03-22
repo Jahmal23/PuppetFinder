@@ -6,7 +6,8 @@ const helpers = require('./helpers/persons');
 const scrape = require('./ref_usa/scrape');
 const searchPersons = require('./helpers/test_names.json'); //require('./helpers/portuguese.json');
 const mailer = require('./helpers/mailer');
-const csvWriter = require('./helpers/csv_writer')
+const csvWriter = require('./helpers/csv_writer');
+const fs = require("fs");
 
 console.log("Starting Ref USA Puppet run");
 
@@ -39,10 +40,10 @@ console.log("Starting Ref USA Puppet run");
 
         foundPersons = await scrape.perform(page, sp, foundPersons);
     
-        await page.screenshot({path: 'lastScreen.png'});  
+        await page.screenshot({path: `${__dirname}/lastScreen.png`});  
     }
 
-    publishResults(foundPersons);
+    publishResults(city, foundPersons);
 
     console.log("Ref USA Puppet run complete");
 
@@ -50,21 +51,29 @@ console.log("Starting Ref USA Puppet run");
 
 })().catch(error => { console.log('FATAL ERROR -- ', error.message); });
 
-async function publishResults(foundPersons) {
+async function publishResults(city, foundPersons) {
 
     await csvWriter.writeCSV([
         {id: 'lastname', title: 'LastName'},
         {id: 'address', title: 'Address'},
-        {id: 'telephone', title: 'Telephone'}], 'results.csv', foundPersons);
-    
-    let args = {from: "PuppetFinder", 
-                subject: "PuppetFinder: Reference USA Search Result", 
-                text: "Please find the results attached.", 
-                csvPath: "results.csv"};
-
+        {id: 'telephone', title: 'Telephone'}], `${__dirname}/results.csv`, foundPersons);
         
-    await mailer.send(args);
+    fs.readFile(`${__dirname}/results.csv`, (err, data) => {
+        
+        if (err) {
+            console.error(err);
+            return;
+          }
+          
+        let args = {to: process.env.RESULTS_DESTINATION,
+            from: "PuppetFinder@test.com", 
+            subject: `PuppetFinder: Reference USA Search Result - ${city}`, 
+            text: "Please find the results attached.",
+            attachmentName: "results.csv",
+            attachmentData:  data.toString("base64")};
+
+        mailer.send(args);
+      })
 
     console.log("Results published");
-
 }

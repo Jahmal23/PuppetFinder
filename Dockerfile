@@ -9,7 +9,6 @@ apt-get clean && apt-get autoremove -y
 
 RUN yarn add puppeteer
 
-RUN npm i aws-sdk
 RUN npm i csv-writer
 RUN npm i @sendgrid/mail
 
