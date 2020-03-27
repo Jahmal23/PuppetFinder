@@ -19,7 +19,7 @@ console.log("Starting Ref USA Puppet run");
 
     const page = await browser.newPage();
 
-    const city = "Springfield";
+    const city = "Ludlow";
     const state = "MA"
 
     await login.performLogin(page);
@@ -30,17 +30,25 @@ console.log("Starting Ref USA Puppet run");
 
     for(let i = 0; i < searchPersons.length; i++){
 
-        currName = searchPersons[i];
+        try {
+            currName = searchPersons[i];
 
-        console.log(`About to search ${currName} in ${city}, ${state}`);
-
-        let sp = new helpers.SearchPerson("", currName, city, state);
-
-        await search.perform(page, sp);
-
-        foundPersons = await scrape.perform(page, sp, foundPersons);
+            console.log(`About to search ${currName} in ${city}, ${state}`);
     
-        await page.screenshot({path: `${__dirname}/lastScreen.png`});  
+            let sp = new helpers.SearchPerson("", currName, city, state);
+    
+            await search.perform(page, sp);
+    
+            foundPersons = await scrape.perform(page, sp, foundPersons);
+        
+            await page.screenshot({path: `${__dirname}/lastScreen.png`});
+
+            await page.waitFor(15*1000);  //let the site breath before continuing
+
+        } catch (error) {
+            console.log(error);
+            console.log("Moving to the next name");
+        }
     }
 
     publishResults(city, foundPersons);
