@@ -53,6 +53,10 @@ console.log("Starting Ref USA Puppet run");
         }
     }
 
+    console.log("Sanitizing the results");
+    
+    foundPersons = await sanitize(foundPersons);
+
     publishResults(city, foundPersons);
 
     console.log("Ref USA Puppet run complete");
@@ -60,6 +64,17 @@ console.log("Starting Ref USA Puppet run");
        //await browser.close();
 
 })().catch(error => { console.log('FATAL ERROR -- ', error.message); });
+
+
+async function sanitize(foundPersons) {
+    return await removeDuplicates(foundPersons);
+}
+
+async function removeDuplicates(foundPersons) {
+    //Set is a new data object introduced in ES6. Because Set only lets you store unique values. 
+    //When you pass in an array, it will remove any duplicate values
+    return Array.from(new Set(foundPersons));
+}
 
 async function publishResults(city, foundPersons) {
 
