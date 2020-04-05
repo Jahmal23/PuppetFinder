@@ -1,8 +1,9 @@
 const helpers = require('../helpers/persons');
 
-HOME_URL = "http://www.referenceusa.com/Home/Home"
+HOME_URL = "http://www.referenceusa.com/Home/Home";
 BASE_URL = "http://www.referenceusa.com/UsWhitePages/Result/";
 PAGE_COUNT_SELECTOR = '#searchResults > div:nth-child(1) > div > div.pageBar > div.text > span.data-page-max';
+PAGE_ADVANCE_SELECTOR = '#searchResults > div:nth-child(1) > div > div.pageBar > div.pager > div.next.button.mousedown-enterkey';
 
 exports.perform = async (page, searchPerson, foundPersons) => {
 
@@ -28,6 +29,7 @@ exports.perform = async (page, searchPerson, foundPersons) => {
         console.log(`Scraping page ${i}`);
 
          await scrapeCurrentPage(page, searchPerson, foundPersons, i);
+         await advanceToPage(page);
     }
 
     console.log(`Scrape complete for ${searchPerson.lastname}.  Returning to homepage \n`);
@@ -39,6 +41,14 @@ exports.perform = async (page, searchPerson, foundPersons) => {
 
     return foundPersons; 
 };
+
+async function advanceToPage(page) {
+
+    await page.click(PAGE_ADVANCE_SELECTOR);
+
+    //clicking doesn't cause a page navigation event so we wait the old fashioned way.
+    await page.waitFor(1.5*1000);
+}
 
 async function scrapeCurrentPage(page, searchPerson, foundPersons, pageNum = 1) {
     const data = await page.evaluate(() => {
