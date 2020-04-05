@@ -19,7 +19,7 @@ console.log("Starting Ref USA Puppet run");
 
     const page = await browser.newPage();
 
-    const city = "Hatfield";
+    const city = "Ludlow";
     const state = "MA"
 
     await login.performLogin(page);
@@ -42,8 +42,10 @@ console.log("Starting Ref USA Puppet run");
             foundPersons = await scrape.perform(page, sp, foundPersons);
         
             await page.screenshot({path: `${__dirname}/lastScreen.png`});
+            
+            console.log("Pausing to let the site breathe");
 
-            await page.waitFor(15*1000);  //let the site breath before continuing
+            await page.waitFor(15*1000);  //let the site breathe before continuing
 
         } catch (error) {
             console.log(error);
