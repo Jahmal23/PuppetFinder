@@ -1,8 +1,6 @@
 const helpers = require('../helpers/persons');
-
-HOME_URL = "http://www.referenceusa.com/Home/Home";
-BASE_URL = "http://www.referenceusa.com/UsWhitePages/Result/";
-PAGE_COUNT_SELECTOR = '#searchResults > div:nth-child(1) > div > div.pageBar > div.text > span.data-page-max';
+const SEARCH_URL = "http://www.referenceusa.com/UsWhitePages/Search/Quick/";
+const BASE_URL = "http://www.referenceusa.com/UsWhitePages/Result/";
 PAGE_ADVANCE_SELECTOR = '#searchResults > div:nth-child(1) > div > div.pageBar > div.pager > div.next.button.mousedown-enterkey';
 
 exports.perform = async (page, searchPerson, foundPersons) => {
@@ -14,7 +12,7 @@ exports.perform = async (page, searchPerson, foundPersons) => {
 
         await Promise.all([
             page.waitForNavigation({waitUntil: 'networkidle0'}),
-            await page.goto(HOME_URL)
+            await page.goto(SEARCH_URL)
         ]);
 
         return foundPersons;
@@ -28,15 +26,18 @@ exports.perform = async (page, searchPerson, foundPersons) => {
 
         console.log(`Scraping page ${i}`);
 
-         await scrapeCurrentPage(page, searchPerson, foundPersons, i);
-         await advanceToPage(page);
+         await scrapeCurrentPage(page, searchPerson, foundPersons);
+
+         if (i < pageCount) { //still more to go...
+            await advanceToPage(page);
+         }
     }
 
     console.log(`Scrape complete for ${searchPerson.lastname}.  Returning to homepage \n`);
 
     await Promise.all([
         page.waitForNavigation({waitUntil: 'networkidle0'}), // The promise resolves after navigation has finished
-        await page.goto(HOME_URL)
+        await page.goto(SEARCH_URL)
     ]);
 
     return foundPersons; 
@@ -50,7 +51,7 @@ async function advanceToPage(page) {
     await page.waitFor(1.5*1000);
 }
 
-async function scrapeCurrentPage(page, searchPerson, foundPersons, pageNum = 1) {
+async function scrapeCurrentPage(page, searchPerson, foundPersons) {
     const data = await page.evaluate(() => {
         const tds = Array.from(document.querySelectorAll('#tblResults tr td')); //todo why do I have to hardcode this?
         return tds.map(td => td.innerHTML);

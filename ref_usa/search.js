@@ -1,21 +1,15 @@
-const BASE_URL = "http://www.referenceusa.com/Home/Home"
-const SEARCH_URL = "http://www.referenceusa.com/UsWhitePages/Search/Quick/"
+const SEARCH_URL = "http://www.referenceusa.com/UsWhitePages/Search/Quick/";
 
-const FIRSTNAME_SELECTOR = "#firstName"
-const LASTNAME_SELECTOR = "#lastName"
-const CITY_SELECTOR = "#city"
-const STATE_SELECTOR = "#stateProvince"
+const FIRSTNAME_SELECTOR = "#firstName";
+const LASTNAME_SELECTOR = "#lastName";
+const CITY_SELECTOR = "#city";
+const STATE_SELECTOR = "#stateProvince";
 
-const VIEW_RESULTS_BUTTON_SELECTOR = "#quickSearch > form > fieldset > div.submitButton > a"
+const VIEW_RESULTS_BUTTON_SELECTOR = "#quickSearch > form > fieldset > div.submitButton > a";
 
 exports.perform = async (page, searchPerson) => {
-
-    if (!page.url().includes(BASE_URL)) {
-        console.log(`Unexpected starting url ${BASE_URL} home page`);
-        return;
-    }
-
-    console.log("On home page, heading directly to search page");
+    
+    console.log("Heading directly to search page");
 
     await Promise.all([
          page.waitForNavigation({waitUntil: 'networkidle0'}), // The promise resolves after navigation has finished

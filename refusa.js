@@ -19,7 +19,7 @@ console.log("Starting Ref USA Puppet run");
 
     const page = await browser.newPage();
 
-    const city = "Ludlow";
+    const city = "Greenfield";
     const state = "MA"
 
     await login.performLogin(page);
@@ -39,13 +39,13 @@ console.log("Starting Ref USA Puppet run");
     
             await search.perform(page, sp);
     
-            foundPersons = await scrape.perform(page, sp, foundPersons);
+            await scrape.perform(page, sp, foundPersons);
         
             await page.screenshot({path: `${__dirname}/lastScreen.png`});
             
             console.log("Pausing to let the site breathe");
 
-            await page.waitFor(15*1000);  //let the site breathe before continuing
+            await page.waitFor(5*1000);  //let the site breathe before continuing
 
         } catch (error) {
             console.log(error);
@@ -55,9 +55,9 @@ console.log("Starting Ref USA Puppet run");
 
     console.log("Sanitizing the results");
     
-    foundPersons = await sanitize(foundPersons);
+    let filtered = await sanitize(foundPersons);
 
-    publishResults(city, foundPersons);
+    publishResults(city, filtered);
 
     console.log("Ref USA Puppet run complete");
 
@@ -71,9 +71,33 @@ async function sanitize(foundPersons) {
 }
 
 async function removeDuplicates(foundPersons) {
-    //Set is a new data object introduced in ES6. Because Set only lets you store unique values. 
-    //When you pass in an array, it will remove any duplicate values
-    return Array.from(new Set(foundPersons));
+    //todo rewrite this using a true filter
+    filtered = [];
+
+    //first person cannot be a duplicate in an empty list
+    filtered.push(foundPersons[0]);
+
+    for(let i = 1; i < foundPersons.length; i++){
+        
+        currentPerson = foundPersons[i];
+        let isUnique = true;
+
+        for(let j = 0; j < filtered.length; j++){
+
+            alreadyAdded = filtered[j];
+
+            if (areFamilyMembers(currentPerson, alreadyAdded)) isUnique = false;
+        }
+
+        if (isUnique) filtered.push(currentPerson);
+    }
+    
+    return filtered;
+}
+
+function areFamilyMembers(personA, personB) {
+    return personA.lastName === personB.lastName &&
+           personA.address === personB.address
 }
 
 async function publishResults(city, foundPersons) {
