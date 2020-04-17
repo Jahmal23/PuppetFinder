@@ -19,8 +19,8 @@ console.log("Starting Ref USA Puppet run");
 
     const page = await browser.newPage();
 
-    const city = "Greenfield";
-    const state = "MA"
+    const city = "Hatfield";
+    const state = "MA";
 
     await login.performLogin(page);
     

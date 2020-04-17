@@ -16,13 +16,23 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - ~/.aws/:/root/.aws:ro
     ports:
       - "8080:8080"
     networks:
       - pnetwork
     command: ["node", "usr/node/app/refusa.js"]
+
+  mass_prop_run:
+    env_file:
+      - variables.env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - pnetwork
+    command: ["node", "usr/node/app/mass_prop_finder.js"]
 networks:
   pnetwork:
     driver: bridge
