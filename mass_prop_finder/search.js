@@ -2,6 +2,9 @@ const SEARCH_URL = "http://gisprpxy.itd.state.ma.us/ParcelAccessibility2/MassPro
 const CITY_SELECTOR = "#cmbCity";
 const STREET_SELECTOR = "#cmbStreet";
 const ADDRESS_SELECTOR = "#cmbAddressNumber";
+const GET_INFO_SELECTOR = "#btnGetInfo";
+const PROP_INFO_TABLE_SELCTOR = "#FormView1";
+
 
 exports.perform = async (page, searchPerson) => {
 
@@ -60,7 +63,39 @@ async function knockOnAllHouses(page) {
         ]);
 
         await page.waitFor(1*1000);
+
+        try {
+
+            await Promise.all([
+                page.waitForNavigation({waitUntil: 'networkidle0'}),
+                await page.click(GET_INFO_SELECTOR) //this is an aspx postback
+            ]);
+
+            await page.waitFor(1*1000);
+
+            await scrapePropertyInfo(page);
+
+        } catch (e) {
+            console.log("Uh oh! Couldn't click the get info button.  Perhaps no houses??");
+            console.log(e);
+        }
+
     }     
+}
+
+async function scrapePropertyInfo(page) {
+
+    const data = await page.evaluate(() => {
+        const tds = Array.from(document.querySelectorAll('#FormView1 tr td')); //todo why do I have to hardcode this?
+        return tds.map(td => td.innerHTML);
+    });
+}
+
+async function isPortugueseOwner(resultTable, portugueseName) {
+
+    //todo - convert to dom elemement would be more efficient?
+    return resultTable && resultTable.includes(portugueseName);
+
 }
 
 async function getAllStreets(page) {
