@@ -19,6 +19,11 @@ exports.perform = async (page, searchPerson) => {
 
     console.log("Retrieving street list from dropdown");
 
+    await walkAllStreets(page);
+};
+
+async function walkAllStreets(page) {
+    
     const streets = await getAllStreets(page);
 
     for(let i = 0; i < streets.length; i++) {
@@ -32,73 +37,17 @@ exports.perform = async (page, searchPerson) => {
             await page.select(STREET_SELECTOR, currStreet) //this is an aspx postback
         ]);
 
-        
         await page.waitFor(1*1000);
 
-        const houses = await getAllHouseNumbers(page);
-
-        console.log(houses);
-        
-        await page.waitFor(1*1000);
-
-        for(let i = 0; i < houses.length; i++) {
-
-            currHouse = houses[i];
-            console.log(`Clicking on house ${currHouse}`);
-
-            await Promise.all([
-                page.waitForNavigation({waitUntil: 'networkidle0'}),
-                await page.select(ADDRESS_SELECTOR, currHouse) //this is an aspx postback
-            ]);
-
-            await page.waitFor(1*1000);
-
-        }        
-        
+        await knockOnAllHouses(page);
     }
-};
-
-async function walkAllStreets(page, streets) {
-
-    for(let i = 0; i < streets.length; i++) {
-    
-        currStreet = streets[i];
-
-        console.log(`Clicking on street ${currStreet}`);
-
-        await Promise.all([
-            page.waitForNavigation({waitUntil: 'networkidle0'}),
-            await page.select(STREET_SELECTOR, currStreet) //this is an aspx postback
-        ]);
-
-        
-        await page.waitFor(1*1000);
-
-        const houses = await getAllHouseNumbers(page);
-
-        console.log(houses);
-        
-        await page.waitFor(1*1000);
-
-        for(let i = 0; i < houses.length; i++) {
-
-            currHouse = houses[i];
-            console.log(`Clicking on house ${currHouse}`);
-
-            await Promise.all([
-                page.waitForNavigation({waitUntil: 'networkidle0'}),
-                await page.select(ADDRESS_SELECTOR, currHouse) //this is an aspx postback
-            ]);
-
-            await page.waitFor(1*1000);
-
-        }        
-        
-    }
-
 }
 
-async function knockOnAllHouses(page, houses) {
+async function knockOnAllHouses(page) {
+
+    const houses = await getAllHouseNumbers(page);
+
+    console.log(houses);
 
     for(let i = 0; i < houses.length; i++) {
 
@@ -111,7 +60,6 @@ async function knockOnAllHouses(page, houses) {
         ]);
 
         await page.waitFor(1*1000);
-
     }     
 }
 
