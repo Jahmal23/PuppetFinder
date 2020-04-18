@@ -19,7 +19,7 @@ console.log("Starting Ref USA Puppet run");
 
     const page = await browser.newPage();
 
-    const city = "Granby";
+    const city = "Shutesbury";
     const state = "MA";
 
     await login.performLogin(page);
