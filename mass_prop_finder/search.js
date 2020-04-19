@@ -29,14 +29,14 @@ exports.perform = async (page, city) => {
 
     await searchAllStreets(page, foundPersons);
 
-    console.log(foundPersons);
+    return foundPersons;
 };
 
 async function searchAllStreets(page, foundPersons) {
     
     const streets = await getAllStreets(page);
 
-    for(let i = 0; i < streets.length; i++) {
+    for(let i = 0; i < 10; i++) {
     
         currStreet = streets[i];
 
