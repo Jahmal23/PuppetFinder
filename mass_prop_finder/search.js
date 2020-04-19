@@ -1,4 +1,5 @@
 const searchPersons = require('../helpers/test_names.json'); //require('./helpers/portuguese.json');
+const helpers = require('../helpers/persons');
 
 const SEARCH_URL = "http://gisprpxy.itd.state.ma.us/ParcelAccessibility2/MassPropertyInfo.aspx";
 const CITY_SELECTOR = "#cmbCity";
@@ -24,10 +25,14 @@ exports.perform = async (page, city) => {
 
     console.log("Retrieving street list from dropdown");
 
-    await walkAllStreets(page);
+    let foundPersons = [];
+
+    await searchAllStreets(page, foundPersons);
+
+    console.log(foundPersons);
 };
 
-async function walkAllStreets(page) {
+async function searchAllStreets(page, foundPersons) {
     
     const streets = await getAllStreets(page);
 
@@ -44,11 +49,11 @@ async function walkAllStreets(page) {
 
         await page.waitFor(1*1000);
 
-        await knockOnAllHouses(page);
+        await knockOnAllHouses(page, currStreet, foundPersons);
     }
 }
 
-async function knockOnAllHouses(page) {
+async function knockOnAllHouses(page, street, foundPersons) {
 
     const houses = await getAllHouseNumbers(page);
 
@@ -76,17 +81,16 @@ async function knockOnAllHouses(page) {
             await page.waitFor(1*1000);
 
             console.log("Clicked property info button.  About to scrape!");
-            await scrapePropertyInfo(page);
+            await scrapePropertyInfo(page, street, currHouse, foundPersons);
 
         } catch (e) {
             console.log("Uh oh! Couldn't click the get info button.  Perhaps no houses??");
             console.log(e);
         }
-
     }     
 }
 
-async function scrapePropertyInfo(page) {
+async function scrapePropertyInfo(page, street, house, foundPersons) {
 
     const data = await page.evaluate(() => {
         const tds = Array.from(document.querySelectorAll('#FormView1 tr td')); //todo why do I have to hardcode this?
@@ -99,8 +103,12 @@ async function scrapePropertyInfo(page) {
         console.log(`Looking for a property owner with name ${currName}`);
         
         let embeddedResultsTable = data[0];
+
         if (await isPortugueseOwner(embeddedResultsTable, currName)) {
-            console.log("Yes! Found a match!!");
+            console.log(`Yes! Found a match for ${currName}`);
+
+            let fh = new helpers.FoundPerson( currName,`${house} ${street}`, "" );
+            foundPersons.push(fh);
         }
     }
 }
