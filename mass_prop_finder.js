@@ -26,7 +26,7 @@ console.log("Starting Mass Property Info Puppet run");
 
         console.log(`About to search ${city},${state} on the Massachusetts property finder site`);
 
-        await search.perform(page, city);
+        foundPersons = await search.perform(page, city);
 
         await page.screenshot({path: `${__dirname}/lastScreen.png`});
          
@@ -37,14 +37,37 @@ console.log("Starting Mass Property Info Puppet run");
          console.log("Moving to the next name");
     }
        
-    //console.log("Sanitizing the results");
-    
-    //let filtered = await sanitize(foundPersons);
-
-    //publishResults(city, filtered);
+    publishResults(city, foundPersons);
 
     console.log("Mass Property Info run complete");
 
        //await browser.close();
 
 })().catch(error => { console.log('FATAL ERROR -- ', error.message); });
+
+async function publishResults(city, foundPersons) {
+
+    await csvWriter.writeCSV([
+        {id: 'lastname', title: 'LastName'},
+        {id: 'address', title: 'Address'},
+        {id: 'telephone', title: 'Telephone'}], `${__dirname}/results.csv`, foundPersons);
+        
+    fs.readFile(`${__dirname}/results.csv`, (err, data) => {
+        
+        if (err) {
+            console.error(err);
+            return;
+          }
+          
+        let args = {to: process.env.RESULTS_DESTINATION,
+            from: "PuppetFinder@test.com", 
+            subject: `PuppetFinder: Reference USA Search Result - ${city}`, 
+            text: "Please find the results attached.",
+            attachmentName: "results.csv",
+            attachmentData:  data.toString("base64")};
+
+        mailer.send(args);
+      })
+
+    console.log("Results published");
+}

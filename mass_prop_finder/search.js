@@ -1,4 +1,4 @@
-const searchPersons = require('../helpers/test_names.json'); //require('./helpers/portuguese.json');
+const searchPersons = require('../helpers/portuguese.json'); //require('./helpers/portuguese.json');
 const helpers = require('../helpers/persons');
 
 const SEARCH_URL = "http://gisprpxy.itd.state.ma.us/ParcelAccessibility2/MassPropertyInfo.aspx";
@@ -36,7 +36,7 @@ async function searchAllStreets(page, foundPersons) {
     
     const streets = await getAllStreets(page);
 
-    for(let i = 0; i < 10; i++) {
+    for(let i = 0; i < streets.length; i++) {
     
         currStreet = streets[i];
 
@@ -47,7 +47,7 @@ async function searchAllStreets(page, foundPersons) {
             await page.select(STREET_SELECTOR, currStreet) //this is an aspx postback
         ]);
 
-        await page.waitFor(1*1000);
+       // await page.waitFor(1*1000);
 
         await knockOnAllHouses(page, currStreet, foundPersons);
     }
@@ -69,7 +69,7 @@ async function knockOnAllHouses(page, street, foundPersons) {
             await page.select(ADDRESS_SELECTOR, currHouse) //this is an aspx postback
         ]);
 
-        await page.waitFor(1*1000);
+       // await page.waitFor(1*1000);
 
         try {
 
@@ -78,7 +78,7 @@ async function knockOnAllHouses(page, street, foundPersons) {
                 await page.click(GET_INFO_SELECTOR) //this is an aspx postback
             ]);
 
-            await page.waitFor(1*1000);
+          //  await page.waitFor(1*1000);
 
             console.log("Clicked property info button.  About to scrape!");
             await scrapePropertyInfo(page, street, currHouse, foundPersons);
@@ -99,8 +99,6 @@ async function scrapePropertyInfo(page, street, house, foundPersons) {
 
     for(let i = 0; i < searchPersons.length; i++){ 
         currName = searchPersons[i];
-        
-        console.log(`Looking for a property owner with name ${currName}`);
         
         let embeddedResultsTable = data[0];
 
