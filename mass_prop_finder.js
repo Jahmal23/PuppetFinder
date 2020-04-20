@@ -17,7 +17,7 @@ console.log("Starting Mass Property Info Puppet run");
 
     const page = await browser.newPage();
 
-    const city = "Ludlow";
+    const city = "Barre";
     const state = "MA";
 
     let foundPersons = [];
@@ -61,7 +61,7 @@ async function publishResults(city, foundPersons) {
           
         let args = {to: process.env.RESULTS_DESTINATION,
             from: "PuppetFinder@test.com", 
-            subject: `PuppetFinder: Reference USA Search Result - ${city}`, 
+            subject: `PuppetFinder: Massachusetts Property Information Search Result - ${city}`, 
             text: "Please find the results attached.",
             attachmentName: "results.csv",
             attachmentData:  data.toString("base64")};
