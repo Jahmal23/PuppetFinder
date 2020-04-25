@@ -11,5 +11,6 @@ RUN yarn add puppeteer
 
 RUN npm i csv-writer
 RUN npm i @sendgrid/mail
+RUN npm i cheerio
 
 COPY . /usr/node/app

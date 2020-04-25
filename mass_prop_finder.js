@@ -1,6 +1,5 @@
 const puppeteer = require('puppeteer');
 const search = require('./mass_prop_finder/search');
-const helpers = require('./helpers/persons');
 const mailer = require('./helpers/mailer');
 const csvWriter = require('./helpers/csv_writer');
 const fs = require("fs");
@@ -17,7 +16,7 @@ console.log("Starting Mass Property Info Puppet run");
 
     const page = await browser.newPage();
 
-    const city = "Barre";
+    const city = "Ludlow";
     const state = "MA";
 
     let foundPersons = [];
