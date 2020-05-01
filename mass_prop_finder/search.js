@@ -63,6 +63,12 @@ async function knockOnAllHouses(page, street, foundPersons) {
     for(let i = 0; i < houses.length; i++) {
 
         currHouse = houses[i];
+
+        if (!currHouse) {
+            console.log("Empty house number.  Skipping");
+            continue;
+        }
+
         console.log(`Clicking on house ${currHouse}`);
 
         await Promise.all([
@@ -110,20 +116,37 @@ async function scrapePropertyInfo(page, street, house, foundPersons) {
 
 async function isPortugueseOwner(resultTable, portugueseName) {
 
+    if (!resultTable) {
+        console.log("Empty Property Info table, skipping isPortugueseOwner");
+    }
+
     const $ = cheerio.load(resultTable);
     let isPort = false;
     
     $('tr').each(function(i, elem) {    
         if (i == 1) { //second row is the property owner             
-             if ($(this).text().includes(portugueseName.toUpperCase())) //everything is uppercase on this site!
+
+             if (isLastNameMatch($(this).text(), portugueseName.toUpperCase())) //everything is uppercase on this site!
              {
                 isPort = true;
-                //break;
              }
         }
       });
 
       return isPort;
+}
+
+ function isLastNameMatch(text, lastname){
+    let names = text.replace(',', '').trim().split(" ");
+    
+    for(let i = 0; i < names.length; i++) {
+        if (names[i] == lastname)
+        {
+            return true;
+        }
+
+    }
+    return false;
 }
 
 async function getAllStreets(page) {
