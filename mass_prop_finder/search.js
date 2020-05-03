@@ -1,4 +1,6 @@
-const searchPersons = require('../helpers/test_names.json'); //require('./helpers/portuguese.json');
+const searchPersons = require('../helpers/portuguese.json'); //require('./helpers/portuguese.json');
+const helpers = require('../helpers/persons');
+const cheerio = require('cheerio');
 
 const SEARCH_URL = "http://gisprpxy.itd.state.ma.us/ParcelAccessibility2/MassPropertyInfo.aspx";
 const CITY_SELECTOR = "#cmbCity";
@@ -24,10 +26,14 @@ exports.perform = async (page, city) => {
 
     console.log("Retrieving street list from dropdown");
 
-    await walkAllStreets(page);
+    let foundPersons = [];
+
+    await searchAllStreets(page, foundPersons);
+
+    return foundPersons;
 };
 
-async function walkAllStreets(page) {
+async function searchAllStreets(page, foundPersons) {
     
     const streets = await getAllStreets(page);
 
@@ -42,13 +48,13 @@ async function walkAllStreets(page) {
             await page.select(STREET_SELECTOR, currStreet) //this is an aspx postback
         ]);
 
-        await page.waitFor(1*1000);
+       // await page.waitFor(1*1000);
 
-        await knockOnAllHouses(page);
+        await knockOnAllHouses(page, currStreet, foundPersons);
     }
 }
 
-async function knockOnAllHouses(page) {
+async function knockOnAllHouses(page, street, foundPersons) {
 
     const houses = await getAllHouseNumbers(page);
 
@@ -57,14 +63,18 @@ async function knockOnAllHouses(page) {
     for(let i = 0; i < houses.length; i++) {
 
         currHouse = houses[i];
+
+        if (!currHouse) {
+            console.log("Empty house number.  Skipping");
+            continue;
+        }
+
         console.log(`Clicking on house ${currHouse}`);
 
         await Promise.all([
             page.waitForNavigation({waitUntil: 'networkidle0'}),
             await page.select(ADDRESS_SELECTOR, currHouse) //this is an aspx postback
         ]);
-
-        await page.waitFor(1*1000);
 
         try {
 
@@ -73,20 +83,17 @@ async function knockOnAllHouses(page) {
                 await page.click(GET_INFO_SELECTOR) //this is an aspx postback
             ]);
 
-            await page.waitFor(1*1000);
-
             console.log("Clicked property info button.  About to scrape!");
-            await scrapePropertyInfo(page);
+            await scrapePropertyInfo(page, street, currHouse, foundPersons);
 
         } catch (e) {
             console.log("Uh oh! Couldn't click the get info button.  Perhaps no houses??");
             console.log(e);
         }
-
     }     
 }
 
-async function scrapePropertyInfo(page) {
+async function scrapePropertyInfo(page, street, house, foundPersons) {
 
     const data = await page.evaluate(() => {
         const tds = Array.from(document.querySelectorAll('#FormView1 tr td')); //todo why do I have to hardcode this?
@@ -96,21 +103,50 @@ async function scrapePropertyInfo(page) {
     for(let i = 0; i < searchPersons.length; i++){ 
         currName = searchPersons[i];
         
-        console.log(`Looking for a property owner with name ${currName}`);
-        
         let embeddedResultsTable = data[0];
+
         if (await isPortugueseOwner(embeddedResultsTable, currName)) {
-            console.log("Yes! Found a match!!");
+            console.log(`Yes! Found a match for ${currName}`);
+
+            let fh = new helpers.FoundPerson( currName,`${house} ${street}`, "" );
+            foundPersons.push(fh);
         }
     }
 }
 
 async function isPortugueseOwner(resultTable, portugueseName) {
 
-    //todo - convert to dom elemement would be more efficient?
-    //https://krasimirtsonev.com/blog/article/Convert-HTML-string-to-DOM-element
-    return resultTable && resultTable.includes(portugueseName.toUpperCase()); //everything is uppercase on this site!
+    if (!resultTable) {
+        console.log("Empty Property Info table, skipping isPortugueseOwner");
+    }
 
+    const $ = cheerio.load(resultTable);
+    let isPort = false;
+    
+    $('tr').each(function(i, elem) {    
+        if (i == 1) { //second row is the property owner             
+
+             if (isLastNameMatch($(this).text(), portugueseName.toUpperCase())) //everything is uppercase on this site!
+             {
+                isPort = true;
+             }
+        }
+      });
+
+      return isPort;
+}
+
+ function isLastNameMatch(text, lastname){
+    let names = text.replace(',', '').trim().split(" ");
+    
+    for(let i = 0; i < names.length; i++) {
+        if (names[i] == lastname)
+        {
+            return true;
+        }
+
+    }
+    return false;
 }
 
 async function getAllStreets(page) {
