@@ -9,8 +9,10 @@ apt-get clean && apt-get autoremove -y
 
 RUN yarn add puppeteer
 
+RUN npm i --global mocha
 RUN npm i csv-writer
 RUN npm i @sendgrid/mail
 RUN npm i cheerio
+RUN npm i --save-dev chai
 
 COPY . /usr/node/app
