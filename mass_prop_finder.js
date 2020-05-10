@@ -2,6 +2,10 @@ const puppeteer = require('puppeteer');
 const search = require('./mass_prop_finder/search');
 const mailer = require('./helpers/mailer');
 const csvWriter = require('./helpers/csv_writer');
+
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 const fs = require("fs");
 
 
@@ -16,7 +20,7 @@ console.log("Starting Mass Property Info Puppet run");
 
     const page = await browser.newPage();
 
-    const city = "Montgomery";
+    const city = "Shelburne";
     const state = "MA";
 
     let foundPersons = [];
@@ -65,7 +69,7 @@ async function publishResults(city, foundPersons) {
             attachmentName: "results.csv",
             attachmentData:  data.toString("base64")};
 
-        mailer.send(args);
+        mailer.send(args, sgMail);
       })
 
     console.log("Results published");
