@@ -4,6 +4,8 @@ To Run:
 
 ./scripts/run_refusa.sh
 
+./scripts/run_tests.sh
+
 ./scripts/sanitycheck.sh
 
 To See a Screenshot locally:

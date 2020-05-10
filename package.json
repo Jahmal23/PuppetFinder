@@ -1,0 +1,5 @@
+{
+	"scripts": {
+		"test": "mocha --recursive --timeout 60000 --exit"
+  }
+}

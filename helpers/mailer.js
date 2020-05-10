@@ -3,8 +3,12 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 
-exports.send = async (args) => {
+exports.send = async (args, smtpServer) => {
 
+  if (!args) {
+    console.log("Empty args, skipping mailing");
+    return false;
+  }
     const msg = {
       to: args.to,
       from: args.from,
@@ -20,8 +24,8 @@ exports.send = async (args) => {
       ] 
     };
 
-  sgMail.send(msg).catch(err => {
-    console.log(err);
-  });
+  smtpServer.send(msg);
+
+  return true;
 
 }

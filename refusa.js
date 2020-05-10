@@ -6,6 +6,9 @@ const helpers = require('./helpers/persons');
 const scrape = require('./ref_usa/scrape');
 const searchPersons = require('./helpers/test_names.json'); //require('./helpers/portuguese.json');
 const mailer = require('./helpers/mailer');
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 const csvWriter = require('./helpers/csv_writer');
 const fs = require("fs");
 
@@ -19,7 +22,7 @@ console.log("Starting Ref USA Puppet run");
 
     const page = await browser.newPage();
 
-    const city = "Shutesbury";
+    const city = "Ludlow";
     const state = "MA";
 
     await login.performLogin(page);
@@ -121,7 +124,7 @@ async function publishResults(city, foundPersons) {
             attachmentName: "results.csv",
             attachmentData:  data.toString("base64")};
 
-        mailer.send(args);
+        mailer.send(args, sgMail);
       })
 
     console.log("Results published");
