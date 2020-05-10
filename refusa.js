@@ -34,7 +34,7 @@ console.log("Starting Ref USA Puppet run");
     for(let i = 0; i < searchPersons.length; i++){
 
         try {
-            currName = searchPersons[i];
+            let currName = searchPersons[i];
 
             console.log(`About to search ${currName} in ${city}, ${state}`);
     

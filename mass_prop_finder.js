@@ -20,7 +20,7 @@ console.log("Starting Mass Property Info Puppet run");
 
     const page = await browser.newPage();
 
-    const city = "Shelburne";
+    const city = "Montague";
     const state = "MA";
 
     let foundPersons = [];
