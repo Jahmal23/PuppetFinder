@@ -21,5 +21,5 @@ exports.accept = async (page) => {
        page.click(CONTINUE_BUTTON_SELECTOR), // Clicking the link will indirectly cause a navigation
     ]);
 
-    await page.waitFor(2*1000);
+    await page.waitFor(30*1000);
 };

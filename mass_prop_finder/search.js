@@ -10,7 +10,7 @@ const GET_INFO_SELECTOR = "#btnGetInfo";
 const PROP_INFO_TABLE_SELCTOR = "#FormView1";
 
 
-exports.perform = async (page, city) => {
+exports.perform = async (page, city, streetlimit = 0) => {
 
     console.log("Heading directly to search page");
 
@@ -28,16 +28,18 @@ exports.perform = async (page, city) => {
 
     let foundPersons = [];
 
-    await searchAllStreets(page, foundPersons);
+    await searchAllStreets(page, foundPersons, streetlimit);
 
     return foundPersons;
 };
 
-async function searchAllStreets(page, foundPersons) {
+async function searchAllStreets(page, foundPersons, streetlimit) {
     
     const streets = await getAllStreets(page);
 
-    for(let i = 0; i < streets.length; i++) {
+    numStreets = streetlimit > 0 ? streetlimit : streets.length
+
+    for(let i = 0; i < numStreets; i++) {
     
         currStreet = streets[i];
 
