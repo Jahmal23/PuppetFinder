@@ -21,5 +21,5 @@ exports.performLogin = async (page) => {
     ]);
 
     //ref usa has a looooooong initial load time
-    await page.waitFor(10*1000);
+    await page.waitFor(30*1000);
 };

@@ -10,7 +10,7 @@ const scrape = require('../ref_usa/scrape');
 describe('#Ref Usa End to End', function() {
     it('should run', async function() {
 
-        this.timeout(45000);
+        this.timeout(120000); //end to end tests take some time
 
         let success =  await (async () => {
             const browser = await puppeteer.launch({
@@ -46,7 +46,6 @@ describe('#Ref Usa End to End', function() {
         
                 } catch (error) {
                     console.log(error);
-                    console.log("Moving to the next name");
                     return false;
                 }              
         })()

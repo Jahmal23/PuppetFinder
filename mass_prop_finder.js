@@ -8,9 +8,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const fs = require("fs");
 
-
 console.log("Starting Mass Property Info Puppet run");
-
 
 (async () => {
     const browser = await puppeteer.launch({
@@ -37,7 +35,6 @@ console.log("Starting Mass Property Info Puppet run");
 
     } catch (error) {
          console.log(error);
-         console.log("Moving to the next name");
     }
        
     publishResults(city, foundPersons);
