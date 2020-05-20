@@ -1,0 +1,8 @@
+language: ruby
+
+services:
+  - docker
+
+
+script:
+- bash ./scripts/run_tests.sh
