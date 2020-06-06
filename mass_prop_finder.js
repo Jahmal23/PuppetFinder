@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const search = require('./mass_prop_finder/search');
 const mailer = require('./helpers/mailer');
 const csvWriter = require('./helpers/csv_writer');
-
+const process_args = require('./helpers/process_args');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -18,8 +18,8 @@ console.log("Starting Mass Property Info Puppet run");
 
     const page = await browser.newPage();
 
-    const city = "Ludlow";
-    const state = "MA";
+    const city = process_args.city() ? process_args.city() : "Ludlow";
+    const state = process_args.state() ? process_args.state() : "MA";
 
     let foundPersons = [];
 

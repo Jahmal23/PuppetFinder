@@ -13,6 +13,9 @@ services:
   refusa_run:
     env_file:
       - variables.env
+    environment:
+      - CITY=${CITY}
+      - STATE=${STATE}
     build:
       context: .
       dockerfile: Dockerfile
@@ -25,6 +28,9 @@ services:
   mass_prop_run:
     env_file:
       - variables.env
+    environment:
+      - CITY=${CITY}
+      - STATE=${STATE}    
     build:
       context: .
       dockerfile: Dockerfile
