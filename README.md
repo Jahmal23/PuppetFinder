@@ -1,8 +1,8 @@
 To Run: 
 
-./scripts/run_massprop.sh
+./scripts/run_massprop.sh Springfield MA
 
-./scripts/run_refusa.sh
+./scripts/run_refusa.sh Springfield MA
 
 ./scripts/run_tests.sh
 

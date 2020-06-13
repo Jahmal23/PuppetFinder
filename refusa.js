@@ -6,6 +6,7 @@ const helpers = require('./helpers/persons');
 const scrape = require('./ref_usa/scrape');
 const searchPersons = require('./helpers/test_names.json'); //require('./helpers/portuguese.json');
 const mailer = require('./helpers/mailer');
+const process_args = require('./helpers/process_args');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -22,8 +23,8 @@ console.log("Starting Ref USA Puppet run");
 
     const page = await browser.newPage();
 
-    const city = "Ludlow";
-    const state = "MA";
+    const city = process_args.city() ? process_args.city() : "Ludlow";
+    const state = process_args.state() ? process_args.state() : "MA";
 
     await login.performLogin(page);
     
