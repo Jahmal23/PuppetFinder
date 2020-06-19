@@ -75,6 +75,8 @@ async function sanitize(foundPersons) {
 }
 
 async function removeDuplicates(foundPersons) {
+    if (foundPersons.length === 0) return foundPersons;
+
     //todo rewrite this using a true filter
     filtered = [];
 
@@ -106,10 +108,16 @@ function areFamilyMembers(personA, personB) {
 
 async function publishResults(city, foundPersons) {
 
-    await csvWriter.writeCSV([
+   let csvExists =  await csvWriter.writeCSV([
         {id: 'lastname', title: 'LastName'},
         {id: 'address', title: 'Address'},
         {id: 'telephone', title: 'Telephone'}], `${__dirname}/results.csv`, foundPersons);
+
+    
+    if (!csvExists) {
+        console.log("No results to send, skipping.")
+        return;
+    }
         
     fs.readFile(`${__dirname}/results.csv`, (err, data) => {
         

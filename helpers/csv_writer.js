@@ -2,7 +2,7 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 exports.writeCSV = async (header, path, records, writer = null) => {
     
-    if (records.length == 0) {
+    if (records.length === 0) {
         console.log('no records, skipping csv creation');
         return false;
     }
