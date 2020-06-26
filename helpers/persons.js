@@ -5,9 +5,9 @@ class FoundPerson {
         this.telephone = telephone;
     }
 
-    isFamilyMember(subject) {
-        return subject.lastName == this.lastname &&
-               subject.address == this.address
+    isFamilyMember(subject) { 
+        return subject.lastname === this.lastname &&
+               subject.address === this.address
     }
 }
 

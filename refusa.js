@@ -92,18 +92,13 @@ async function removeDuplicates(foundPersons) {
 
             alreadyAdded = filtered[j];
 
-            if (areFamilyMembers(currentPerson, alreadyAdded)) isUnique = false;
+            if (currentPerson.isFamilyMember(alreadyAdded)) isUnique = false;
         }
 
         if (isUnique) filtered.push(currentPerson);
     }
     
     return filtered;
-}
-
-function areFamilyMembers(personA, personB) {
-    return personA.lastName === personB.lastName &&
-           personA.address === personB.address
 }
 
 async function publishResults(city, foundPersons) {
