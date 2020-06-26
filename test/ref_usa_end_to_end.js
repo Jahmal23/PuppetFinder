@@ -1,4 +1,4 @@
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 const puppeteer = require('puppeteer');
 
 const login = require('../ref_usa/login');

@@ -1,5 +1,5 @@
 const persons = require('../helpers/persons');
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 
 describe('#Persons', function() {
     it('should be a family member', async function() {

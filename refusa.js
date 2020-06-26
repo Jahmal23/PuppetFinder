@@ -8,6 +8,7 @@ const searchPersons = require('./helpers/test_names.json'); //require('./helpers
 const mailer = require('./helpers/mailer');
 const process_args = require('./helpers/process_args');
 const sgMail = require('@sendgrid/mail');
+const santizer = require('./helpers/sanitize');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const csvWriter = require('./helpers/csv_writer');
@@ -71,34 +72,7 @@ console.log("Starting Ref USA Puppet run");
 
 
 async function sanitize(foundPersons) {
-    return await removeDuplicates(foundPersons);
-}
-
-async function removeDuplicates(foundPersons) {
-    if (foundPersons.length === 0) return foundPersons;
-
-    //todo rewrite this using a true filter
-    filtered = [];
-
-    //first person cannot be a duplicate in an empty list
-    filtered.push(foundPersons[0]);
-
-    for(let i = 1; i < foundPersons.length; i++){
-        
-        currentPerson = foundPersons[i];
-        let isUnique = true;
-
-        for(let j = 0; j < filtered.length; j++){
-
-            alreadyAdded = filtered[j];
-
-            if (currentPerson.isFamilyMember(alreadyAdded)) isUnique = false;
-        }
-
-        if (isUnique) filtered.push(currentPerson);
-    }
-    
-    return filtered;
+    return await santizer.removeDuplicates(foundPersons);
 }
 
 async function publishResults(city, foundPersons) {
