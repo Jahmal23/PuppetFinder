@@ -1,5 +1,5 @@
 const mailer = require('../helpers/mailer');
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 
 describe('#Mailer', function() {
   let args = {to: "foo",

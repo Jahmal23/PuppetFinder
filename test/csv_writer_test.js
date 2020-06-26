@@ -1,6 +1,6 @@
 const csvWriter = require('../helpers/csv_writer');
 const persons = require('../helpers/persons');
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 
 describe('#CSV', function() {
     it('should write', async function() {
