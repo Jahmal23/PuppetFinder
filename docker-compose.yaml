@@ -40,6 +40,21 @@ services:
       - pnetwork
     command: ["node", "usr/node/app/mass_prop_finder.js"]
 
+  fast_people_prop_run:
+    env_file:
+      - variables.env
+    environment:
+      - CITY=${CITY}
+      - STATE=${STATE}    
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - pnetwork
+    command: ["node", "usr/node/app/fast_people_search.js"]
+  
   test_run:
     env_file:
       - variables.env
