@@ -14,6 +14,9 @@ To See a Screenshot locally:
 
 1. Remove await browser.close(); from the main runner js
 2. docker cp puppetfinder_refusa_run_1:usr/node/app/lastScreen.png ~/OtherCodes/PuppetFinder/  -- [Your local directory]
+3. docker cp puppetfinder_mass_prop_run_1:usr/node/app/lastScreen.png ~/OtherCodes/PuppetFinder/ -- [Your local directory]
+4. docker cp puppetfinder_fast_people_prop_run_1:usr/node/app/lastScreen.png ~/OtherCodes/PuppetFinder/ -- [Your local directory]
+
 
 To view the Results CSV locally:
 

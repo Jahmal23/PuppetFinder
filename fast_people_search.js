@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const search = require('./fast_people_search/search');
 const helpers = require('./helpers/persons');
-//const scrape = require('./ref_usa/scrape');
+const scrape = require('./fast_people_search/scrape');
 const searchPersons = require('./helpers/test_names.json'); //require('./helpers/portuguese.json');
 const mailer = require('./helpers/mailer');
 const process_args = require('./helpers/process_args');
@@ -38,7 +38,7 @@ console.log("Starting Fast People Search run");
     
             await search.perform(page, sp);
     
-           // await scrape.perform(page, sp, foundPersons);
+            await scrape.perform(page, sp, foundPersons);
         
             await page.screenshot({path: `${__dirname}/lastScreen.png`});
             
