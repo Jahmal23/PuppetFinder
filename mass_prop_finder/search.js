@@ -6,7 +6,7 @@ const SEARCH_URL = "http://gisprpxy.itd.state.ma.us/ParcelAccessibility2/MassPro
 const CITY_SELECTOR = "#cmbCity";
 const STREET_SELECTOR = "#cmbStreet";
 const ADDRESS_SELECTOR = "#cmbAddressNumber";
-const GET_INFO_SELECTOR = "#btnGetInfo";
+const GET_INFO_SELECTOR = "#btnNewGetInfo";
 const PROP_INFO_TABLE_SELCTOR = "#FormView1";
 
 
