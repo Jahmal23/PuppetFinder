@@ -60,7 +60,7 @@ async function publishResults(city, foundPersons) {
           }
           
         let args = {to: process.env.RESULTS_DESTINATION,
-            from: "PuppetFinder@test.com", 
+            from: "jahmaltransfer@gmail.com", 
             subject: `PuppetFinder: Massachusetts Property Information Search Result - ${city}`, 
             text: "Please find the results attached.",
             attachmentName: "results.csv",

@@ -9,7 +9,7 @@ const scrape = require('../ref_usa/scrape');
 
 describe('#Ref Usa End to End', function() {
     it('should run', async function() {
-
+        this.skip(); //Reference USA has been redesigned
         this.timeout(120000); //end to end tests take some time
 
         let success =  await (async () => {
